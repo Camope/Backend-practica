@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Encapsulate field &apos;es.mdef.gestionpedidos.entidades.Usuario.role&apos; in &apos;es.mdef.gestionpedidos.entidades.Usuario&apos;&#x0A;- Original project: &apos;gestionpedidos&apos;&#x0A;- Original element: &apos;es.mdef.gestionpedidos.entidades.Usuario.role&apos;&#x0A;- Getter method name: &apos;getRole&apos;&#x0A;- Setter method name: &apos;setRole&apos;&#x0A;- Field visibility: &apos;public&apos;&#x0A;- Use getter and setter methods in declaring type" comments="false" declaring="true" description="Encapsulate field &apos;role&apos;" flags="589830" getter="getRole" id="org.eclipse.jdt.ui.self.encapsulate" input="/src\/main\/java=/gradle_scope=/main=/=/gradle_used_by_scope=/main,test=/&lt;es.mdef.gestionpedidos.entidades{Usuario.java[Usuario^role" insertion="10" setter="setRole" stamp="1681460080827" version="1.0" visibility="1"/>
-</session>
