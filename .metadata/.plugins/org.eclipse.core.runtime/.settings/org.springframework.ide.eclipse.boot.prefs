@@ -1,0 +1,13 @@
+eclipse.preferences.version=1
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.artifactId=Api
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.bootVersion=3.0.3
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.description=API del proyecto
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.groupId=com.example
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.javaVersion=11
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.language=java
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.name=Api
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.packageName=com.example.demo
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.packaging=jar
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.type=GRADLE
+org.springframework.ide.eclipse.boot.wizard.PreferredSelections.version=0.0.1-SNAPSHOT
+org.springframework.ide.eclipse.boot.wizard.initializr.url=https\://start.spring.io\n

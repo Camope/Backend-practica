@@ -1,0 +1,5 @@
+package es.mdef.gestionpedidos.entidades;
+
+enum Role {
+	administrador, noAdministrador
+}

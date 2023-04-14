@@ -1,0 +1,19 @@
+package es.mdef.gestionpedidos.REST;
+
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
+@Relation(itemRelation = "usuario")
+public class UsuarioPostModel extends RepresentationModel<UsuarioPostModel> {
+
+	private String nombre;
+	private String nombreUsuario;
+	private String password;
+//	private Departamento departamento;
+//	private Tipo tipo;
+	private String telefono;
+	private String Role;
+	
+	
+	
+}

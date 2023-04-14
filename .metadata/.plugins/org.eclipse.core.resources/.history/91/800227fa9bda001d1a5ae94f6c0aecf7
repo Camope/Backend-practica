@@ -1,0 +1,5 @@
+package es.mdef.gestionpedidos.entidades;
+
+public class Role {
+
+}
