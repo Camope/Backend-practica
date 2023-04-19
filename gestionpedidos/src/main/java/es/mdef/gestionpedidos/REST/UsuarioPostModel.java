@@ -3,16 +3,20 @@ package es.mdef.gestionpedidos.REST;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import es.mdef.gestionpedidos.entidades.NoAdministrador.Departamento;
+import es.mdef.gestionpedidos.entidades.NoAdministrador.Tipo;
+import es.mdef.gestionpedidos.entidades.Usuario.Role;
+
 @Relation(itemRelation = "usuario")
 public class UsuarioPostModel extends RepresentationModel<UsuarioPostModel> {
 
 	private String nombre;
 	private String nombreUsuario;
 	private String password;
-//	private Departamento departamento;
-//	private Tipo tipo;
+	private Departamento departamento;
+	private Tipo tipo;
 	private String telefono;
-	private String Role;
+	private Role role;
 
 	public String getNombre() {
 		return nombre;
@@ -38,6 +42,23 @@ public class UsuarioPostModel extends RepresentationModel<UsuarioPostModel> {
 		this.password = password;
 	}
 
+	
+	public Departamento getDepartamento() {
+		return departamento;
+	}
+
+	public void setDepartamento(Departamento departamento) {
+		this.departamento = departamento;
+	}
+
+	public Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
+	}
+
 	public String getTelefono() {
 		return telefono;
 	}
@@ -46,18 +67,18 @@ public class UsuarioPostModel extends RepresentationModel<UsuarioPostModel> {
 		this.telefono = telefono;
 	}
 
-	public String getRole() {
-		return Role;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setRole(String role) {
-		Role = role;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	@Override
 	public String toString() {
 		return "UsuarioPostModel [nombre=" + nombre + ", nombreUsuario=" + nombreUsuario + ", telefono=" + telefono
-				+ ", Role=" + Role + "]";
+				+ ", Role=" + role + "]";
 	}
 
 }

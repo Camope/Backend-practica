@@ -3,11 +3,13 @@ package es.mdef.gestionpedidos.REST;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import es.mdef.gestionpedidos.entidades.Usuario.Role;
+
 @Relation(itemRelation = "usuarios")
 public class UsuarioListaModel extends RepresentationModel<UsuarioListaModel> {
 
 	private String nombre;
-	private String role;
+	private Role role;
 
 	public String getNombre() {
 		return nombre;
@@ -17,11 +19,11 @@ public class UsuarioListaModel extends RepresentationModel<UsuarioListaModel> {
 		this.nombre = nombre;
 	}
 
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 

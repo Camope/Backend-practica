@@ -1,17 +1,19 @@
 package es.mdef.gestionpedidos.REST;
 
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
 
-@Relation(itemRelation = "usuario")
+import es.mdef.gestionpedidos.entidades.NoAdministrador.Departamento;
+import es.mdef.gestionpedidos.entidades.NoAdministrador.Tipo;
+import es.mdef.gestionpedidos.entidades.Usuario.Role;
+
 public class UsuarioPutModel extends RepresentationModel<UsuarioPutModel> {
 
 	private String nombre;
 	private String nombreUsuario;
-//	private Departamento departamento;
-//	private Tipo tipo;
+	private Departamento departamento;
+	private Tipo tipo;
 	private String telefono;
-	private String role;
+	private Role role;
 
 	public String getNombre() {
 		return nombre;
@@ -28,6 +30,22 @@ public class UsuarioPutModel extends RepresentationModel<UsuarioPutModel> {
 	public void setNombreUsuario(String nombreUsuario) {
 		this.nombreUsuario = nombreUsuario;
 	}
+	
+	public Departamento getDepartamento() {
+		return departamento;
+	}
+
+	public void setDepartamento(Departamento departamento) {
+		this.departamento = departamento;
+	}
+
+	public Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
+	}
 
 	public String getTelefono() {
 		return telefono;
@@ -37,11 +55,11 @@ public class UsuarioPutModel extends RepresentationModel<UsuarioPutModel> {
 		this.telefono = telefono;
 	}
 
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 

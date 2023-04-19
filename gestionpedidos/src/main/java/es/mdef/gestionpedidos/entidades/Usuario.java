@@ -1,5 +1,7 @@
 package es.mdef.gestionpedidos.entidades;
 
+import org.hibernate.annotations.DiscriminatorFormula;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -9,60 +11,67 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="USUARIOS")
+@Table(name = "USUARIOS")
+@DiscriminatorFormula("CASE WHEN role=0 THEN 'ADMINISTRADOR' WHEN role=1 THEN 'NO_ADMINISTRADOR' end")
 public class Usuario {
+	
+	public static enum Role {
+		administrador,
+		noAdministrador
+	}
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private Long id;
 	private String nombre;
 	private String nombreUsuario;
 	private String password;
-	private String role;
-	
+	private Role role;
+
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getNombre() {
 		return nombre;
 	}
-	
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
+
 	public String getNombreUsuario() {
 		return nombreUsuario;
 	}
-	
+
 	public void setNombreUsuario(String nombreUsuario) {
 		this.nombreUsuario = nombreUsuario;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	public String getRole() {
+
+	public Role getRole() {
 		return this.role;
 	}
-	
-	public void setRole(String role) {
+
+	public void setRole(Role role) {
 		this.role = role;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Usuario(" + id + ") " + nombre + ", nombre de Usuario: " + nombreUsuario + ", Rol: " + role;
 	}
-	
+
 }
