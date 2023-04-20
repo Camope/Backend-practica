@@ -1,5 +1,7 @@
 package es.mdef.gestionpedidos.entidades;
 
+import java.util.List;
+
 import org.hibernate.annotations.DiscriminatorFormula;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +31,8 @@ public class Usuario {
 	private String nombreUsuario;
 	private String password;
 	private Role role;
+	@OneToMany(mappedBy = "usuario")
+	List<Pregunta> preguntas;
 
 	public Long getId() {
 		return id;
@@ -67,6 +72,14 @@ public class Usuario {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public List<Pregunta> getPreguntas() {
+		return preguntas;
+	}
+
+	public void setPreguntas(List<Pregunta> pedidos) {
+		this.preguntas = pedidos;
 	}
 
 	@Override
