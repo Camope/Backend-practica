@@ -25,11 +25,5 @@ public class PreguntaListaAssembler implements RepresentationModelAssembler<Preg
 		return model;
 	}
 
-//	public CollectionModel<UsuarioListaModel> toCollection(List<Usuario> lista) {
-//		CollectionModel<UsuarioListaModel> collection = CollectionModel
-//				.of(lista.stream().map(this::toModel).collect(Collectors.toList()));
-//		collection.add(linkTo(methodOn(UsuarioController.class).all()).withRel("usuarios"));
-//		return collection;
-//	}
 }
 

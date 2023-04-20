@@ -35,16 +35,16 @@ public class UsuarioController {
 	private final UsuarioRepositorio repositorio;
 	private final UsuarioAssembler assembler;
 	private final UsuarioListaAssembler listaAssembler;
-	private final PreguntaListaAssembler pedidoAssembler;
+	private final PreguntaListaAssembler preguntaListaAssembler;
 	private final Logger log;
 
-	UsuarioController(UsuarioRepositorio repositorio, UsuarioAssembler assembler,
-			UsuarioListaAssembler listaAssembler, PreguntaListaAssembler pedidoAssembler) {
+	UsuarioController(UsuarioRepositorio repositorio, UsuarioAssembler assembler, UsuarioListaAssembler listaAssembler,
+			PreguntaListaAssembler pedidoAssembler) {
 		this.repositorio = repositorio;
 		this.assembler = assembler;
 		this.listaAssembler = listaAssembler;
-		this.pedidoAssembler = pedidoAssembler; 
-		
+		this.preguntaListaAssembler = pedidoAssembler;
+
 		log = GestionpedidosApplication.log;
 	}
 
@@ -58,21 +58,49 @@ public class UsuarioController {
 	@PutMapping("{id}")
 	public UsuarioModel edit(@PathVariable Long id, @RequestBody UsuarioPutModel model) {
 
+		boolean roleChanged = false;
 		Usuario usuario = repositorio.findById(id).map(u -> {
-			u.setRole(model.getRole());
-			u.setNombre(model.getNombre());
-			u.setNombreUsuario(model.getNombreUsuario());
-			return repositorio.save(u);
+			return u;
 		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
-		
-		if(model.getRole() == Role.administrador) {
-			Administrador usuario2 = (Administrador) repositorio.findById(id).map(u -> {
-				return u;
-			}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
+
+		if (usuario.getRole() != model.getRole()) {
+
+			if (model.getRole() == Role.administrador) {
+				Administrador usuarioAdmin = new Administrador();
+				usuarioAdmin.setTelefono(model.getTelefono());
+				usuario = usuarioAdmin;
+			} else if (model.getRole() == Role.noAdministrador) {
+				NoAdministrador usuarioNoAdm = new NoAdministrador();
+				usuarioNoAdm.setDepartamento(model.getDepartamento());
+				usuarioNoAdm.setTipo(model.getTipo());
+				usuario = usuarioNoAdm;
+			}
 			
+			roleChanged = true;
+
+		} else {
+			
+			if (usuario.getRole() == Role.administrador) {
+				((Administrador)usuario).setTelefono(model.getTelefono());
+			} else if (model.getRole() == Role.noAdministrador) {
+				((NoAdministrador)usuario).setDepartamento(model.getDepartamento());
+				((NoAdministrador)usuario).setTipo(model.getTipo());
+			}
 		}
 
-		log.info("Actualizado " + usuario);
+		usuario.setNombre(model.getNombre());
+		usuario.setNombreUsuario(model.getNombreUsuario());
+		usuario.setRole(model.getRole());
+		
+		repositorio.save(usuario);
+		
+		if (roleChanged) {
+			log.info(usuario + " Sustituye a Usuario(" + id + ")");
+			repositorio.deleteById(id);
+		} else {
+			log.info("Actualizado " + usuario);
+		}
+
 		return assembler.toModel(usuario);
 	}
 
@@ -94,16 +122,16 @@ public class UsuarioController {
 		return assembler.toModel(usuario);
 	}
 
-//	@GetMapping("{id}/preguntas")
-//	public CollectionModel<PreguntaListaModel> questions(@PathVariable Long id) {
-//		List<Pregunta> preguntas = repositorio.findById(id)
-//				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario"))
-//				.getPreguntas();
-//		return CollectionModel.of(
-//				preguntas.stream().map(pregunta -> PreguntaAssembler EntityModel.of(pregunta)).collect(Collectors.toList()),
-//				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withSelfRel()
-//		);
-//	}
+	@GetMapping("{id}/preguntas")
+	public CollectionModel<PreguntaListaModel> questions(@PathVariable Long id) {
+		List<Pregunta> preguntas = repositorio.findById(id)
+				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario"))
+				.getPreguntas();
+		return CollectionModel.of(
+				preguntas.stream().map(pregunta -> preguntaListaAssembler.toModel(pregunta)).collect(Collectors.toList()),
+				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withSelfRel()
+		);
+	}
 }
 
 /*
