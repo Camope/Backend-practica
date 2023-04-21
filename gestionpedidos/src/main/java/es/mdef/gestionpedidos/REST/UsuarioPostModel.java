@@ -11,7 +11,7 @@ import es.mdef.gestionpedidos.entidades.Usuario.Role;
 public class UsuarioPostModel extends RepresentationModel<UsuarioPostModel> {
 
 	private String nombre;
-	private String nombreUsuario;
+	private String username;
 	private String password;
 	private Departamento departamento;
 	private Tipo tipo;
@@ -26,12 +26,12 @@ public class UsuarioPostModel extends RepresentationModel<UsuarioPostModel> {
 		this.nombre = nombre;
 	}
 
-	public String getNombreUsuario() {
-		return nombreUsuario;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNombreUsuario(String nombreUsuario) {
-		this.nombreUsuario = nombreUsuario;
+	public void setUsername(String nombreUsuario) {
+		this.username = nombreUsuario;
 	}
 
 	public String getPassword() {
@@ -77,7 +77,7 @@ public class UsuarioPostModel extends RepresentationModel<UsuarioPostModel> {
 
 	@Override
 	public String toString() {
-		return "UsuarioPostModel [nombre=" + nombre + ", nombreUsuario=" + nombreUsuario + ", telefono=" + telefono
+		return "UsuarioPostModel [nombre=" + nombre + ", nombreUsuario=" + username + ", telefono=" + telefono
 				+ ", Role=" + role + "]";
 	}
 

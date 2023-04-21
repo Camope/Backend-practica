@@ -28,7 +28,7 @@ public class Usuario {
 	@JsonIgnore
 	private Long id;
 	private String nombre;
-	private String nombreUsuario;
+	private String username;
 	private String password;
 	private Role role;
 	@OneToMany(mappedBy = "usuario")
@@ -50,12 +50,12 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 
-	public String getNombreUsuario() {
-		return nombreUsuario;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNombreUsuario(String nombreUsuario) {
-		this.nombreUsuario = nombreUsuario;
+	public void setUsername(String nombreUsuario) {
+		this.username = nombreUsuario;
 	}
 
 	public String getPassword() {
@@ -78,13 +78,13 @@ public class Usuario {
 		return preguntas;
 	}
 
-	public void setPreguntas(List<Pregunta> pedidos) {
-		this.preguntas = pedidos;
+	public void setPreguntas(List<Pregunta> preguntas) {
+		this.preguntas = preguntas;
 	}
 
 	@Override
 	public String toString() {
-		return "Usuario(" + id + ") " + nombre + ", nombre de Usuario: " + nombreUsuario + ", Rol: " + role;
+		return "Usuario(" + id + ") " + nombre + ", nombre de Usuario: " + username + ", Rol: " + role;
 	}
 
 }

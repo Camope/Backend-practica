@@ -3,8 +3,8 @@ package es.mdef.gestionpedidos.REST;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-@Relation(itemRelation = "preguntas")
-public class PreguntaListaModel extends RepresentationModel<PreguntaListaModel> {
+@Relation(itemRelation = "familia")
+public class FamiliaPostModel extends RepresentationModel<FamiliaPostModel> {
 
 	private String enunciado;
 
@@ -18,7 +18,7 @@ public class PreguntaListaModel extends RepresentationModel<PreguntaListaModel> 
 
 	@Override
 	public String toString() {
-		return "PreguntaListaModel [enunciado=" + enunciado + "]";
+		return "FamiliaPostModel [enunciado=" + enunciado + "]";
 	}
 
 }

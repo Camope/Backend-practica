@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,15 +22,16 @@ import es.mdef.gestionpedidos.GestionpedidosApplication;
 import es.mdef.gestionpedidos.entidades.Administrador;
 import es.mdef.gestionpedidos.entidades.NoAdministrador;
 import es.mdef.gestionpedidos.entidades.Pregunta;
-import es.mdef.gestionpedidos.entidades.NoAdministrador.Departamento;
-import es.mdef.gestionpedidos.entidades.NoAdministrador.Tipo;
 import es.mdef.gestionpedidos.entidades.Usuario.Role;
-import es.mdef.gestionpedidos.repositorios.PreguntaRepositorio;
 import es.mdef.gestionpedidos.repositorios.UsuarioRepositorio;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
+	@PersistenceContext
+	EntityManager em;
 	private final UsuarioRepositorio repositorio;
 	private final UsuarioAssembler assembler;
 	private final UsuarioListaAssembler listaAssembler;
@@ -65,40 +65,63 @@ public class UsuarioController {
 
 		if (usuario.getRole() != model.getRole()) {
 
-			if (model.getRole() == Role.administrador) {
+		if (model.getRole() == Role.administrador) {
 				Administrador usuarioAdmin = new Administrador();
 				usuarioAdmin.setTelefono(model.getTelefono());
 				usuario = usuarioAdmin;
-			} else if (model.getRole() == Role.noAdministrador) {
+//			em.createNativeQuery("UPDATE USUARIOS SET NOMBRE=?, NOMBRE_USUARIO=?, ROLE=?, TELEFONO=?, DEPARTAMENTO=?, TIPO=? WHERE ID=?")
+//				.setParameter(1, model.getNombre())
+//				.setParameter(2, model.getUsername())
+//				.setParameter(3, Role.administrador)
+//				.setParameter(4, model.getTelefono())
+//				.setParameter(5, null)
+//				.setParameter(6, null)
+//				.executeUpdate();
+		} else if (model.getRole() == Role.noAdministrador) {
 				NoAdministrador usuarioNoAdm = new NoAdministrador();
 				usuarioNoAdm.setDepartamento(model.getDepartamento());
 				usuarioNoAdm.setTipo(model.getTipo());
 				usuario = usuarioNoAdm;
-			}
-			
+//			em.createNativeQuery("UPDATE USUARIOS SET NOMBRE=?, NOMBRE_USUARIO=?, ROLE=?, TELEFONO=?, DEPARTAMENTO=?, TIPO=? WHERE ID=?")
+//				.setParameter(1, model.getNombre())
+//				.setParameter(2, model.getUsername())
+//				.setParameter(3, Role.noAdministrador)
+//				.setParameter(4, null)
+//				.setParameter(5, model.getDepartamento())
+//				.setParameter(6, model.getTipo())
+//				.executeUpdate();
+		}
+
 			roleChanged = true;
 
 		} else {
-			
+
 			if (usuario.getRole() == Role.administrador) {
-				((Administrador)usuario).setTelefono(model.getTelefono());
+				((Administrador) usuario).setTelefono(model.getTelefono());
 			} else if (model.getRole() == Role.noAdministrador) {
-				((NoAdministrador)usuario).setDepartamento(model.getDepartamento());
-				((NoAdministrador)usuario).setTipo(model.getTipo());
+				((NoAdministrador) usuario).setDepartamento(model.getDepartamento());
+				((NoAdministrador) usuario).setTipo(model.getTipo());
 			}
 		}
 
 		usuario.setNombre(model.getNombre());
-		usuario.setNombreUsuario(model.getNombreUsuario());
+		usuario.setUsername(model.getUsername());
 		usuario.setRole(model.getRole());
-		
+		System.out.println(id);
+		usuario.setId(id);
+
 		repositorio.save(usuario);
-		
+
 		if (roleChanged) {
 			log.info(usuario + " Sustituye a Usuario(" + id + ")");
 			repositorio.deleteById(id);
 		} else {
-			log.info("Actualizado " + usuario);
+
+//		Usuario usuario = repositorio.findById(id).map(u -> {
+//			return u;
+//		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
+		
+		log.info("Actualizado " + usuario);
 		}
 
 		return assembler.toModel(usuario);
@@ -123,15 +146,25 @@ public class UsuarioController {
 	}
 
 	@GetMapping("{id}/preguntas")
-	public CollectionModel<PreguntaListaModel> questions(@PathVariable Long id) {
+	public CollectionModel<PreguntaModel> questions(@PathVariable Long id) {
 		List<Pregunta> preguntas = repositorio.findById(id)
-				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario"))
-				.getPreguntas();
+				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
 		return CollectionModel.of(
-				preguntas.stream().map(pregunta -> preguntaListaAssembler.toModel(pregunta)).collect(Collectors.toList()),
-				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withSelfRel()
-		);
+				preguntas.stream().map(pregunta -> preguntaListaAssembler.toModel(pregunta))
+						.collect(Collectors.toList()),
+				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withSelfRel());
 	}
+	
+	@GetMapping("{id}/familias")
+	public CollectionModel<FamiliaModel> getFamilies(@PathVariable Long id) {
+		List<Pregunta> preguntas = repositorio.findById(id)
+				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
+//		return CollectionModel.of(
+//				preguntas.stream().map(pregunta -> preguntaListaAssembler.toModel(pregunta))
+//						.collect(Collectors.toList()),
+//				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withSelfRel());
+	}
+	
 }
 
 /*

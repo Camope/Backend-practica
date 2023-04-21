@@ -12,13 +12,11 @@ import es.mdef.gestionpedidos.entidades.Usuario.Role;
 public class UsuarioModel extends RepresentationModel<UsuarioModel> {
 
 	private String nombre;
-	private String nombreUsuario;
+	private String username;
 	private Departamento departamento;
 	private Tipo tipo;
 	private String telefono;
 	private Role role;
-	private Link preguntas;
-	private Link familias;
 
 	public String getNombre() {
 		return nombre;
@@ -28,12 +26,12 @@ public class UsuarioModel extends RepresentationModel<UsuarioModel> {
 		this.nombre = nombre;
 	}
 
-	public String getNombreUsuario() {
-		return nombreUsuario;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNombreUsuario(String nombreUsuario) {
-		this.nombreUsuario = nombreUsuario;
+	public void setUsername(String nombreUsuario) {
+		this.username = nombreUsuario;
 	}
 
 	public Departamento getDepartamento() {
@@ -68,25 +66,9 @@ public class UsuarioModel extends RepresentationModel<UsuarioModel> {
 		this.role = role;
 	}
 
-	public Link getPreguntas() {
-		return preguntas;
-	}
-
-	public void setPreguntas(Link preguntas) {
-		this.preguntas = preguntas;
-	}
-
-	public Link getFamilias() {
-		return familias;
-	}
-
-	public void setFamilias(Link familias) {
-		this.familias = familias;
-	}
-	
 	@Override
 	public String toString() {
-		return "UsuarioModel [nombre=" + nombre + ", nombreUsuario=" + nombreUsuario + ", telefono=" + telefono
+		return "UsuarioModel [nombre=" + nombre + ", nombreUsuario=" + username + ", telefono=" + telefono
 				+ ", Role=" + role + "]";
 	}
 

@@ -9,7 +9,7 @@ import es.mdef.gestionpedidos.entidades.Usuario.Role;
 public class UsuarioPutModel extends RepresentationModel<UsuarioPutModel> {
 
 	private String nombre;
-	private String nombreUsuario;
+	private String username;
 	private Departamento departamento;
 	private Tipo tipo;
 	private String telefono;
@@ -23,12 +23,12 @@ public class UsuarioPutModel extends RepresentationModel<UsuarioPutModel> {
 		this.nombre = nombre;
 	}
 
-	public String getNombreUsuario() {
-		return nombreUsuario;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setNombreUsuario(String nombreUsuario) {
-		this.nombreUsuario = nombreUsuario;
+	public void setUsername(String nombreUsuario) {
+		this.username = nombreUsuario;
 	}
 	
 	public Departamento getDepartamento() {
@@ -65,7 +65,7 @@ public class UsuarioPutModel extends RepresentationModel<UsuarioPutModel> {
 
 	@Override
 	public String toString() {
-		return "UsuarioPutModel [nombre=" + nombre + ", nombreUsuario=" + nombreUsuario + ", telefono=" + telefono
+		return "UsuarioPutModel [nombre=" + nombre + ", nombreUsuario=" + username + ", telefono=" + telefono
 				+ ", role=" + role + "]";
 	}
 

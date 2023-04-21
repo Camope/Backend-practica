@@ -19,7 +19,7 @@ public class UsuarioAssembler implements RepresentationModelAssembler<Usuario, U
 		UsuarioModel model = new UsuarioModel();
 
 		model.setNombre(entity.getNombre());
-		model.setNombreUsuario(entity.getNombreUsuario());
+		model.setUsername(entity.getUsername());
 		model.setRole(entity.getRole());
 
 		if (entity.getRole() == Role.administrador) {
@@ -49,7 +49,7 @@ public class UsuarioAssembler implements RepresentationModelAssembler<Usuario, U
 		}
 		
 		usuario.setNombre(model.getNombre());
-		usuario.setNombreUsuario(model.getNombreUsuario());
+		usuario.setUsername(model.getUsername());
 		usuario.setPassword(model.getPassword());
 		usuario.setRole(model.getRole());
 
