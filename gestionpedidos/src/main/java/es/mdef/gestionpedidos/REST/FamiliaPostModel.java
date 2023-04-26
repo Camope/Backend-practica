@@ -3,7 +3,7 @@ package es.mdef.gestionpedidos.REST;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-@Relation(itemRelation = "familia")
+//@Relation(itemRelation = "familia")
 public class FamiliaPostModel extends RepresentationModel<FamiliaPostModel> {
 
 	private String enunciado;

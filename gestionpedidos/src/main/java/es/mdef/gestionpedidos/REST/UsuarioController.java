@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.mdef.gestionpedidos.entidades.Usuario;
+import es.mdef.gestionpedidos.entidades.NoAdministrador.Departamento;
+import es.mdef.gestionpedidos.entidades.NoAdministrador.Tipo;
 import es.mdef.gestionpedidos.GestionpedidosApplication;
 import es.mdef.gestionpedidos.entidades.Administrador;
+import es.mdef.gestionpedidos.entidades.FamiliaImpl;
 import es.mdef.gestionpedidos.entidades.NoAdministrador;
 import es.mdef.gestionpedidos.entidades.Pregunta;
 import es.mdef.gestionpedidos.entidades.Usuario.Role;
@@ -36,14 +39,16 @@ public class UsuarioController {
 	private final UsuarioAssembler assembler;
 	private final UsuarioListaAssembler listaAssembler;
 	private final PreguntaListaAssembler preguntaListaAssembler;
+	private final FamiliaListaAssembler familiaListaAssembler;
 	private final Logger log;
 
 	UsuarioController(UsuarioRepositorio repositorio, UsuarioAssembler assembler, UsuarioListaAssembler listaAssembler,
-			PreguntaListaAssembler pedidoAssembler) {
+			PreguntaListaAssembler preguntaListaAssembler, FamiliaListaAssembler familiaListaAssembler) {
 		this.repositorio = repositorio;
 		this.assembler = assembler;
 		this.listaAssembler = listaAssembler;
-		this.preguntaListaAssembler = pedidoAssembler;
+		this.preguntaListaAssembler = preguntaListaAssembler;
+		this.familiaListaAssembler = familiaListaAssembler;
 
 		log = GestionpedidosApplication.log;
 	}
@@ -57,72 +62,26 @@ public class UsuarioController {
 
 	@PutMapping("{id}")
 	public UsuarioModel edit(@PathVariable Long id, @RequestBody UsuarioPutModel model) {
+		
+		
 
-		boolean roleChanged = false;
-		Usuario usuario = repositorio.findById(id).map(u -> {
-			return u;
-		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
-
-		if (usuario.getRole() != model.getRole()) {
+		int n_regs = 0;
 
 		if (model.getRole() == Role.administrador) {
-				Administrador usuarioAdmin = new Administrador();
-				usuarioAdmin.setTelefono(model.getTelefono());
-				usuario = usuarioAdmin;
-//			em.createNativeQuery("UPDATE USUARIOS SET NOMBRE=?, NOMBRE_USUARIO=?, ROLE=?, TELEFONO=?, DEPARTAMENTO=?, TIPO=? WHERE ID=?")
-//				.setParameter(1, model.getNombre())
-//				.setParameter(2, model.getUsername())
-//				.setParameter(3, Role.administrador)
-//				.setParameter(4, model.getTelefono())
-//				.setParameter(5, null)
-//				.setParameter(6, null)
-//				.executeUpdate();
+			n_regs = repositorio.update(model.getNombre(), model.getUsername(), model.getRole().ordinal(),
+					model.getTelefono(), null, null, id);
 		} else if (model.getRole() == Role.noAdministrador) {
-				NoAdministrador usuarioNoAdm = new NoAdministrador();
-				usuarioNoAdm.setDepartamento(model.getDepartamento());
-				usuarioNoAdm.setTipo(model.getTipo());
-				usuario = usuarioNoAdm;
-//			em.createNativeQuery("UPDATE USUARIOS SET NOMBRE=?, NOMBRE_USUARIO=?, ROLE=?, TELEFONO=?, DEPARTAMENTO=?, TIPO=? WHERE ID=?")
-//				.setParameter(1, model.getNombre())
-//				.setParameter(2, model.getUsername())
-//				.setParameter(3, Role.noAdministrador)
-//				.setParameter(4, null)
-//				.setParameter(5, model.getDepartamento())
-//				.setParameter(6, model.getTipo())
-//				.executeUpdate();
+			n_regs = repositorio.update(model.getNombre(), model.getUsername(), model.getRole().ordinal(), null,
+					model.getDepartamento().ordinal(), model.getTipo().ordinal(), id);
+		}
+		
+		if (n_regs == 0) {
+			throw new RegisterNotFoundException(id, "No se han podido modificar los datos");
 		}
 
-			roleChanged = true;
-
-		} else {
-
-			if (usuario.getRole() == Role.administrador) {
-				((Administrador) usuario).setTelefono(model.getTelefono());
-			} else if (model.getRole() == Role.noAdministrador) {
-				((NoAdministrador) usuario).setDepartamento(model.getDepartamento());
-				((NoAdministrador) usuario).setTipo(model.getTipo());
-			}
-		}
-
-		usuario.setNombre(model.getNombre());
-		usuario.setUsername(model.getUsername());
-		usuario.setRole(model.getRole());
-		System.out.println(id);
-		usuario.setId(id);
-
-		repositorio.save(usuario);
-
-		if (roleChanged) {
-			log.info(usuario + " Sustituye a Usuario(" + id + ")");
-			repositorio.deleteById(id);
-		} else {
-
-//		Usuario usuario = repositorio.findById(id).map(u -> {
-//			return u;
-//		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
+		Usuario usuario = repositorio.findById(id).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
 		
 		log.info("Actualizado " + usuario);
-		}
 
 		return assembler.toModel(usuario);
 	}
@@ -135,7 +94,8 @@ public class UsuarioController {
 
 	@GetMapping
 	public CollectionModel<UsuarioListaModel> all() {
-		return listaAssembler.toCollection(repositorio.findAll());
+		return listaAssembler.toCollection(repositorio.findAll())
+				.add(linkTo(methodOn(UsuarioController.class).all()).withRel("usuarios"));
 	}
 
 	@PostMapping
@@ -146,45 +106,45 @@ public class UsuarioController {
 	}
 
 	@GetMapping("{id}/preguntas")
-	public CollectionModel<PreguntaModel> questions(@PathVariable Long id) {
+	public CollectionModel<PreguntaModel> getPreguntas(@PathVariable Long id) {
 		List<Pregunta> preguntas = repositorio.findById(id)
 				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
-		return CollectionModel.of(
-				preguntas.stream().map(pregunta -> preguntaListaAssembler.toModel(pregunta))
-						.collect(Collectors.toList()),
-				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withSelfRel());
-	}
-	
-	@GetMapping("{id}/familias")
-	public CollectionModel<FamiliaModel> getFamilies(@PathVariable Long id) {
-		List<Pregunta> preguntas = repositorio.findById(id)
-				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
-//		return CollectionModel.of(
+
+		return preguntaListaAssembler.toCollection(preguntas).add(
+				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withRel("preguntasPorUsuario"));
+//				CollectionModel.of(
 //				preguntas.stream().map(pregunta -> preguntaListaAssembler.toModel(pregunta))
 //						.collect(Collectors.toList()),
-//				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withSelfRel());
+//				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withRel("preguntasPorUsuario"));
 	}
-	
-}
 
-/*
- * 
- * @GetMapping("porEstado") public CollectionModel<PedidoListaModel>
- * pedidosPorEstado(@RequestParam PedidoEstado estado) { return
- * listaAssembler.toCollection( repositorio.findPedidoByEstado(estado) ); }
- * 
- * @PostMapping public EntityModel<Pedido> add(@RequestBody PedidoModel model) {
- * Pedido pedido = repositorio.save(assembler.toEntity(model));
- * log.info("Añadido " + pedido); return assembler.toModel(pedido); }
- * 
- * @PutMapping("{id}") public EntityModel<Pedido> edit(@PathVariable Long
- * id, @RequestBody PedidoModel model) { Pedido pedido =
- * repositorio.findById(id).map(ped -> {
- * ped.setDescripcion(model.getDescripcion()); ped.setEstado(model.getEstado());
- * return repositorio.save(ped); }) .orElseThrow(() -> new
- * RegisterNotFoundException(id, "pedido")); log.info("Actualizado " + pedido);
- * return assembler.toModel(pedido); }
- * 
- * @DeleteMapping("{id}") public void delete(@PathVariable Long id) {
- * log.info("Borrado pedido " + id); repositorio.deleteById(id); } }
- */
+	@GetMapping("{id}/familias")
+	public CollectionModel<FamiliaModel> getFamilies(@PathVariable Long id) {
+//		List<Pregunta> preguntas = repositorio.findById(id)
+//			.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
+
+		List<FamiliaImpl> familias = repositorio.findById(id)
+				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas().stream()
+				.map(Pregunta::getFamilia).distinct().collect(Collectors.toList());
+
+		return familiaListaAssembler.toCollection(familias).add(
+				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("familias").withRel("familiasPorUsuario"));
+//		return CollectionModel.of(
+//			preguntas.stream()
+//				.map(pregunta -> pregunta.getFamilia())
+//				.distinct()
+//				.map(familia -> familiaListaAssembler.toModel(familia))
+//				.collect(Collectors.toList()),
+//			linkTo(methodOn(UsuarioController.class).getOne(id)).slash("familias").withRel("familiasPorUsuario"));
+	}
+
+	@PutMapping("{id}/password")
+	public void passChange(@PathVariable Long id, @RequestBody String password) {
+
+		repositorio.findById(id).map(u -> {
+			u.setPassword(password);
+			return repositorio.save(u);
+		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
+	}
+
+}

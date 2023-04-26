@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "FAMILIAS")
-public class FamiliaImpl extends Familia{
+public class FamiliaImpl extends es.mdef.support.Familia{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,7 @@ public class FamiliaImpl extends Familia{
 	private Long id;
 	@OneToMany(mappedBy = "familia")
 	List<Pregunta> preguntas;
-	private Long tamano;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -38,13 +37,10 @@ public class FamiliaImpl extends Familia{
 	public void setPreguntas(List<Pregunta> preguntas) {
 		this.preguntas = preguntas;
 	}
-
+	
 	public Long getTamano() {
-		return tamano;
+		return preguntas == null ? Long.valueOf(0) : Long.valueOf(preguntas.size());
 	}
 
-	public void setTamano() {
-		this.tamano = Long.valueOf(preguntas.size());
-	}
 
 }

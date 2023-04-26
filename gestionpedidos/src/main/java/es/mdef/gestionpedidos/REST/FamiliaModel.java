@@ -3,9 +3,6 @@ package es.mdef.gestionpedidos.REST;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import es.mdef.gestionpedidos.entidades.FamiliaImpl;
-import es.mdef.gestionpedidos.entidades.Usuario;
-
 @Relation(itemRelation = "familia")
 public class FamiliaModel extends RepresentationModel<FamiliaModel> {
 

@@ -10,22 +10,22 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import es.mdef.gestionpedidos.entidades.Usuario;
+import es.mdef.gestionpedidos.entidades.FamiliaImpl;
 
 @Component
-public class UsuarioListaAssembler implements RepresentationModelAssembler<Usuario, UsuarioListaModel> {
+public class FamiliaListaAssembler implements RepresentationModelAssembler<FamiliaImpl, FamiliaModel> {
 	
 	@Override
-	public UsuarioListaModel toModel(Usuario entity) {
-		UsuarioListaModel model = new UsuarioListaModel();
-		model.setNombre(entity.getNombre());
-		model.setRole(entity.getRole());
-		model.add(linkTo(methodOn(UsuarioController.class).getOne(entity.getId())).withSelfRel());
+	public FamiliaModel toModel(FamiliaImpl entity) {
+		FamiliaModel model = new FamiliaModel();
+		model.setEnunciado(entity.getEnunciado());
+		model.setTamano(entity.getTamano());
+		model.add(linkTo(methodOn(FamiliaController.class).getOne(entity.getId())).withSelfRel());
 		return model;
 	}
 
-	public CollectionModel<UsuarioListaModel> toCollection(List<Usuario> lista) {
-		CollectionModel<UsuarioListaModel> collection = CollectionModel
+	public CollectionModel<FamiliaModel> toCollection(List<FamiliaImpl> lista) {
+		CollectionModel<FamiliaModel> collection = CollectionModel
 				.of(lista.stream().map(this::toModel).collect(Collectors.toList()));
 		return collection;
 	}

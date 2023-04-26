@@ -5,9 +5,6 @@ import org.springframework.hateoas.server.core.Relation;
 
 import es.mdef.gestionpedidos.entidades.FamiliaImpl;
 import es.mdef.gestionpedidos.entidades.Usuario;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
 
 @Relation(itemRelation = "pregunta")
 public class PreguntaPostModel extends RepresentationModel<PreguntaPostModel> {

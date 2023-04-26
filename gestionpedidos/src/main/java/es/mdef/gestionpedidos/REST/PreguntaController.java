@@ -1,8 +1,10 @@
 package es.mdef.gestionpedidos.REST;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.slf4j.Logger;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,90 +14,72 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.mdef.gestionpedidos.entidades.Usuario;
 import es.mdef.gestionpedidos.GestionpedidosApplication;
-import es.mdef.gestionpedidos.entidades.Administrador;
-import es.mdef.gestionpedidos.entidades.NoAdministrador;
-import es.mdef.gestionpedidos.entidades.NoAdministrador.Departamento;
-import es.mdef.gestionpedidos.entidades.NoAdministrador.Tipo;
-import es.mdef.gestionpedidos.entidades.Usuario.Role;
+import es.mdef.gestionpedidos.entidades.Pregunta;
 import es.mdef.gestionpedidos.repositorios.PreguntaRepositorio;
-import es.mdef.gestionpedidos.repositorios.UsuarioRepositorio;
 
 @RestController
 @RequestMapping("/preguntas")
 public class PreguntaController {
 	private final PreguntaRepositorio repositorio;
-	//private final PreguntaAssembler assembler;
-	//private final UsuarioListaAssembler listaAssembler;
+	private final PreguntaAssembler assembler;
+	private final PreguntaListaAssembler listaAssembler;
 	private final Logger log;
 	
-	PreguntaController(PreguntaRepositorio repositorio){//, PreguntaAssembler assembler) {
+	PreguntaController(PreguntaRepositorio repositorio, PreguntaAssembler assembler, PreguntaListaAssembler listaAssembler) {
 		this.repositorio = repositorio;
-		//this.assembler = assembler;
-		//this.listaAssembler = listaAssembler;
+		this.assembler = assembler;
+		this.listaAssembler = listaAssembler;
 		log = GestionpedidosApplication.log;
 	}
 
-//	public CollectionModel<PreguntaListaModel> questionById(Long id){
-//		return repositorio.findPreguntaByUsuarioId(id);
-//		EntityModel<Pedido> model = EntityModel.of(entity);
-//		model.add(
-//				linkTo(methodOn(PedidoController.class).one(entity.getId())).withSelfRel()
-//				);
-//		return model;
-//	}
+	@GetMapping("{id}")
+	public PreguntaModel getOne(@PathVariable Long id) {
+		Pregunta pregunta = repositorio.findById(id)
+				.orElseThrow(() -> new RegisterNotFoundException(id, "pregunta"));
+		log.info("Recuperada " + pregunta);
+		return assembler.toModel(pregunta)
+				.add(linkTo(methodOn(UsuarioController.class).getOne(pregunta.getUsuario().getId())).withSelfRel())
+				.add(linkTo(methodOn(FamiliaController.class).getOne(pregunta.getFamilia().getId())).withSelfRel());
+	}
 	
-//	@GetMapping("{id}")
-//	public UsuarioModel getOne(@PathVariable Long id) {
-//		Usuario usuario = repositorio.findById(id)
-//				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
-//		log.info("Recuperado " + usuario);
-//		return assembler.toModel(usuario);
-//	}
-//	
-//	@PutMapping("{id}")
-//	public UsuarioModel edit(@PathVariable Long id, @RequestBody UsuarioPutModel model) {
-//		Usuario usuario = repositorio.findById(id).map(u -> {
-//			
-//			u.setNombre(model.getNombre());
-//			u.setNombreUsuario(model.getNombreUsuario());
-//			u.setRole(model.getRole());
-//			
-//			if(u.getRole() == Role.administrador) {
-//				((Administrador)u).setTelefono(model.getTelefono());
-//			} else if(u.getRole() == Role.noAdministrador) {
-//				((NoAdministrador)u).setDepartamento(model.getDepartamento());
-//				((NoAdministrador)u).setTipo(model.getTipo());
-//			}
-//			
-//			return repositorio.save(u);
-//		})
-//		.orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
-//		log.info("Actualizado " + usuario);
-//		return assembler.toModel(usuario);
-//	}
-//	
-//	@DeleteMapping("{id}")
-//	public void delete(@PathVariable Long id) {
-//		log.info("Borrado usuario " + id);
-//		repositorio.deleteById(id);
-//	}
-//	
-//	@GetMapping
-//	public CollectionModel<UsuarioListaModel> all() {
-//		return listaAssembler.toCollection(repositorio.findAll());
-//	}
-//	
-//	@PostMapping
-//	public UsuarioModel add(@RequestBody UsuarioPostModel model) {
-//		Usuario usuario = repositorio.save(assembler.toEntity(model));
-//		log.info("Añadido " + usuario);
-//		return assembler.toModel(usuario);
-//	}
-//	
-//	@GetMapping("{id}/preguntas")
-//	public CollectionModel<PreguntaListaModel> questions() {
-//		return listaAssembler.toCollection(repositorio.findAll());
-//	}
+	@PutMapping("{id}")
+	public PreguntaModel edit(@PathVariable Long id, @RequestBody PreguntaPostModel model) {
+		Pregunta pregunta = repositorio.findById(id).map(p -> {
+		
+			p.setEnunciado(model.getEnunciado());
+			p.setUsuario(model.getUsuario());
+			p.setFamilia(model.getFamilia());
+			
+			return repositorio.save(p);
+		})
+		.orElseThrow(() -> new RegisterNotFoundException(id, "pretunta"));
+		log.info("Actualizada " + pregunta);
+		return assembler.toModel(pregunta);
+	}
+	
+	@DeleteMapping("{id}")
+	public void delete(@PathVariable Long id) {
+		log.info("Borrada pregunta " + id);
+		repositorio.deleteById(id);
+	}
+	
+	@GetMapping
+	public CollectionModel<PreguntaModel> all() {
+		return listaAssembler.toCollection(repositorio.findAll());
+	}
+	
+	@PostMapping
+	public PreguntaModel add(@RequestBody PreguntaPostModel model) {
+		Pregunta pregunta = new Pregunta();
+		
+		pregunta.setEnunciado(model.getEnunciado());
+		pregunta.setUsuario(model.getUsuario());
+		pregunta.setFamilia(model.getFamilia());
+		
+		repositorio.save(pregunta);
+		log.info("Añadida " + pregunta);
+		return assembler.toModel(pregunta);
+	}
+	
 }
