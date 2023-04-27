@@ -13,19 +13,19 @@ import org.springframework.stereotype.Component;
 import es.mdef.gestionpedidos.entidades.FamiliaImpl;
 
 @Component
-public class FamiliaListaAssembler implements RepresentationModelAssembler<FamiliaImpl, FamiliaModel> {
+public class FamiliaListaAssembler implements RepresentationModelAssembler<FamiliaImpl, FamiliaListaModel> {
 	
 	@Override
-	public FamiliaModel toModel(FamiliaImpl entity) {
-		FamiliaModel model = new FamiliaModel();
+	public FamiliaListaModel toModel(FamiliaImpl entity) {
+		FamiliaListaModel model = new FamiliaListaModel();
 		model.setEnunciado(entity.getEnunciado());
 		model.setTamano(entity.getTamano());
 		model.add(linkTo(methodOn(FamiliaController.class).getOne(entity.getId())).withSelfRel());
 		return model;
 	}
 
-	public CollectionModel<FamiliaModel> toCollection(List<FamiliaImpl> lista) {
-		CollectionModel<FamiliaModel> collection = CollectionModel
+	public CollectionModel<FamiliaListaModel> toCollection(List<FamiliaImpl> lista) {
+		CollectionModel<FamiliaListaModel> collection = CollectionModel
 				.of(lista.stream().map(this::toModel).collect(Collectors.toList()));
 		return collection;
 	}

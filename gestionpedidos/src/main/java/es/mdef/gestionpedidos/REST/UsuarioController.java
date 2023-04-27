@@ -62,8 +62,6 @@ public class UsuarioController {
 
 	@PutMapping("{id}")
 	public UsuarioModel edit(@PathVariable Long id, @RequestBody UsuarioPutModel model) {
-		
-		
 
 		int n_regs = 0;
 
@@ -106,20 +104,16 @@ public class UsuarioController {
 	}
 
 	@GetMapping("{id}/preguntas")
-	public CollectionModel<PreguntaModel> getPreguntas(@PathVariable Long id) {
+	public CollectionModel<PreguntaListaModel> getPreguntas(@PathVariable Long id) {
 		List<Pregunta> preguntas = repositorio.findById(id)
 				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
 
 		return preguntaListaAssembler.toCollection(preguntas).add(
 				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withRel("preguntasPorUsuario"));
-//				CollectionModel.of(
-//				preguntas.stream().map(pregunta -> preguntaListaAssembler.toModel(pregunta))
-//						.collect(Collectors.toList()),
-//				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("preguntas").withRel("preguntasPorUsuario"));
 	}
 
 	@GetMapping("{id}/familias")
-	public CollectionModel<FamiliaModel> getFamilies(@PathVariable Long id) {
+	public CollectionModel<FamiliaListaModel> getFamilies(@PathVariable Long id) {
 //		List<Pregunta> preguntas = repositorio.findById(id)
 //			.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
 

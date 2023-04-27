@@ -16,6 +16,8 @@ public class FamiliaAssembler implements RepresentationModelAssembler<FamiliaImp
 		FamiliaModel model = new FamiliaModel();
 		model.setEnunciado(entity.getEnunciado());
 		model.setTamano(entity.getTamano());
+		model.add(linkTo(methodOn(FamiliaController.class).getUsers(entity.getId())).withRel("usuarios"));
+		model.add(linkTo(methodOn(FamiliaController.class).getPreguntas(entity.getId())).withRel("preguntas"));
 		model.add(linkTo(methodOn(FamiliaController.class).getOne(entity.getId())).withSelfRel());
 		return model;
 	}

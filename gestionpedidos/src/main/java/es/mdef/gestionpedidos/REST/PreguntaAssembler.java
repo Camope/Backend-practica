@@ -15,9 +15,9 @@ public class PreguntaAssembler implements RepresentationModelAssembler<Pregunta,
 	public PreguntaModel toModel(Pregunta entity) {
 		PreguntaModel model = new PreguntaModel();
 		model.setEnunciado(entity.getEnunciado());
-		model.add(linkTo(methodOn(PreguntaController.class).getOne(entity.getId())).withSelfRel())
-			.add(linkTo(methodOn(UsuarioController.class).getOne(entity.getUsuario().getId())).withSelfRel())
-			.add(linkTo(methodOn(FamiliaController.class).getOne(entity.getFamilia().getId())).withSelfRel());
+		model.add(linkTo(methodOn(UsuarioController.class).getOne(entity.getUsuario().getId())).withRel("usuario"))
+			.add(linkTo(methodOn(FamiliaController.class).getOne(entity.getFamilia().getId())).withRel("familia"))
+			.add(linkTo(methodOn(PreguntaController.class).getOne(entity.getId())).withSelfRel());
 		
 		return model;
 	}

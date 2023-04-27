@@ -5,7 +5,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import es.mdef.gestionpedidos.entidades.Usuario.Role;
 
-@Relation(itemRelation = "usuarios")
+@Relation(collectionRelation = "usuarios")
 public class UsuarioListaModel extends RepresentationModel<UsuarioListaModel> {
 
 	private String nombre;

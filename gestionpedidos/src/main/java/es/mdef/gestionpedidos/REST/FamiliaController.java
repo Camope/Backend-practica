@@ -48,9 +48,8 @@ public class FamiliaController {
 		FamiliaImpl familia = repositorio.findById(id)
 				.orElseThrow(() -> new RegisterNotFoundException(id, "familia"));
 		log.info("Recuperada " + familia);
-		return assembler.toModel(familia)
-				.add(linkTo(methodOn(UsuarioController.class).getPreguntas(id)).withSelfRel());
-				//.add(linkTo(methodOn(FamiliaController.class).getOne(pregunta.getFamilia().getId())).withSelfRel());
+		return assembler.toModel(familia);
+
 	}
 
 	@PutMapping("{id}")
@@ -67,7 +66,7 @@ public class FamiliaController {
 	}
 	
 	@GetMapping("{id}/preguntas")
-	public CollectionModel<PreguntaModel> getPreguntas(@PathVariable Long id) {
+	public CollectionModel<PreguntaListaModel> getPreguntas(@PathVariable Long id) {
 		List<Pregunta> preguntas = repositorio.findById(id)
 				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
 		
@@ -77,7 +76,7 @@ public class FamiliaController {
 	}
 	
 	@GetMapping("{id}/usuarios")
-	public CollectionModel<UsuarioListaModel> getFamilies(@PathVariable Long id) {
+	public CollectionModel<UsuarioListaModel> getUsers(@PathVariable Long id) {
 		
 		List<Usuario> usuarios = repositorio.findById(id)
 				.orElseThrow(() -> new RegisterNotFoundException(id, "familia"))
@@ -98,7 +97,7 @@ public class FamiliaController {
 	}
 	
 	@GetMapping
-	public CollectionModel<FamiliaModel> all() {
+	public CollectionModel<FamiliaListaModel> all() {
 		return listaAssembler.toCollection(repositorio.findAll());
 	}
 	

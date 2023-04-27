@@ -13,20 +13,19 @@ import org.springframework.stereotype.Component;
 import es.mdef.gestionpedidos.entidades.Pregunta;
 
 @Component
-public class PreguntaListaAssembler implements RepresentationModelAssembler<Pregunta, PreguntaModel> {
+public class PreguntaListaAssembler implements RepresentationModelAssembler<Pregunta, PreguntaListaModel> {
 	
 	@Override
-	public PreguntaModel toModel(Pregunta entity) {
-		PreguntaModel model = new PreguntaModel();
+	public PreguntaListaModel toModel(Pregunta entity) {
+		PreguntaListaModel model = new PreguntaListaModel();
 		model.setEnunciado(entity.getEnunciado());
 		model.add(linkTo(methodOn(PreguntaController.class).getOne(entity.getId())).withSelfRel());
 		return model;
 	}
 
-	public CollectionModel<PreguntaModel> toCollection(List<Pregunta> lista) {
-		CollectionModel<PreguntaModel> collection = CollectionModel
+	public CollectionModel<PreguntaListaModel> toCollection(List<Pregunta> lista) {
+		CollectionModel<PreguntaListaModel> collection = CollectionModel
 				.of(lista.stream().map(this::toModel).collect(Collectors.toList()));
-		collection.add(linkTo(methodOn(PreguntaController.class).all()).withRel("preguntas"));
 		return collection;
 	}
 }

@@ -38,9 +38,7 @@ public class PreguntaController {
 		Pregunta pregunta = repositorio.findById(id)
 				.orElseThrow(() -> new RegisterNotFoundException(id, "pregunta"));
 		log.info("Recuperada " + pregunta);
-		return assembler.toModel(pregunta)
-				.add(linkTo(methodOn(UsuarioController.class).getOne(pregunta.getUsuario().getId())).withSelfRel())
-				.add(linkTo(methodOn(FamiliaController.class).getOne(pregunta.getFamilia().getId())).withSelfRel());
+		return assembler.toModel(pregunta);
 	}
 	
 	@PutMapping("{id}")
@@ -65,8 +63,9 @@ public class PreguntaController {
 	}
 	
 	@GetMapping
-	public CollectionModel<PreguntaModel> all() {
-		return listaAssembler.toCollection(repositorio.findAll());
+	public CollectionModel<PreguntaListaModel> all() {
+		return listaAssembler.toCollection(repositorio.findAll())
+				.add(linkTo(methodOn(PreguntaController.class).all()).withRel("preguntas"));
 	}
 	
 	@PostMapping
