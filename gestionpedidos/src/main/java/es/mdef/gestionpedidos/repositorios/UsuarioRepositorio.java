@@ -1,5 +1,7 @@
 package es.mdef.gestionpedidos.repositorios;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,8 @@ import jakarta.transaction.Transactional;
 
 public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 
+	Optional<Usuario> findByUsername(String username);
+	
 	@Transactional
 	@Modifying
 	@Query(

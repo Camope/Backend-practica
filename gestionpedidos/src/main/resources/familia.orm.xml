@@ -5,7 +5,9 @@
 	version="1.0"> 
     <mapped-superclass class="es.mdef.support.Familia" access="FIELD">
         <attributes> 
-            <basic name="enunciado"/>
+            <basic name="enunciado">
+            	<column name="enunciado" unique="true" nullable="false" />
+            </basic>
         </attributes>
      </mapped-superclass>
 </entity-mappings>

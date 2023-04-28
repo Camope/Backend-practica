@@ -8,8 +8,11 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +32,7 @@ import es.mdef.gestionpedidos.entidades.Usuario.Role;
 import es.mdef.gestionpedidos.repositorios.UsuarioRepositorio;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -61,7 +65,7 @@ public class UsuarioController {
 	}
 
 	@PutMapping("{id}")
-	public UsuarioModel edit(@PathVariable Long id, @RequestBody UsuarioPutModel model) {
+	public UsuarioModel edit(@PathVariable Long id, @Valid @RequestBody UsuarioPutModel model) {
 
 		int n_regs = 0;
 
@@ -97,7 +101,8 @@ public class UsuarioController {
 	}
 
 	@PostMapping
-	public UsuarioModel add(@RequestBody UsuarioPostModel model) {
+	public UsuarioModel add(@Valid @RequestBody UsuarioPostModel model) {
+		model.setPassword(new BCryptPasswordEncoder().encode(model.getPassword()));
 		Usuario usuario = repositorio.save(assembler.toEntity(model));
 		log.info("Añadido " + usuario);
 		return assembler.toModel(usuario);
@@ -114,8 +119,6 @@ public class UsuarioController {
 
 	@GetMapping("{id}/familias")
 	public CollectionModel<FamiliaListaModel> getFamilies(@PathVariable Long id) {
-//		List<Pregunta> preguntas = repositorio.findById(id)
-//			.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas();
 
 		List<FamiliaImpl> familias = repositorio.findById(id)
 				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getPreguntas().stream()
@@ -123,20 +126,13 @@ public class UsuarioController {
 
 		return familiaListaAssembler.toCollection(familias).add(
 				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("familias").withRel("familiasPorUsuario"));
-//		return CollectionModel.of(
-//			preguntas.stream()
-//				.map(pregunta -> pregunta.getFamilia())
-//				.distinct()
-//				.map(familia -> familiaListaAssembler.toModel(familia))
-//				.collect(Collectors.toList()),
-//			linkTo(methodOn(UsuarioController.class).getOne(id)).slash("familias").withRel("familiasPorUsuario"));
 	}
 
-	@PutMapping("{id}/password")
-	public void passChange(@PathVariable Long id, @RequestBody String password) {
+	@PatchMapping("{id}/password")
+	public void passChange(@PathVariable Long id, @Valid @RequestBody String password) {
 
 		repositorio.findById(id).map(u -> {
-			u.setPassword(password);
+			u.setPassword(new BCryptPasswordEncoder().encode(password));
 			return repositorio.save(u);
 		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
 	}
