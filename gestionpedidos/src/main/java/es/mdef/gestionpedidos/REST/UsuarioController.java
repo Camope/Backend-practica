@@ -131,10 +131,12 @@ public class UsuarioController {
 	@PatchMapping("{id}/password")
 	public void passChange(@PathVariable Long id, @Valid @RequestBody String password) {
 
-		repositorio.findById(id).map(u -> {
+		Usuario usuarioActualizado = repositorio.findById(id).map(u -> {
 			u.setPassword(new BCryptPasswordEncoder().encode(password));
 			return repositorio.save(u);
 		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
+		
+		log.info("Cambiada la contraseña del usuario " + usuarioActualizado);
 	}
 
 }

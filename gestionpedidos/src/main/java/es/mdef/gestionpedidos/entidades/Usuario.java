@@ -47,6 +47,7 @@ public class Usuario implements UserDetails { // implementa UserDetails para la 
 //	@NotBlank(message="role es un campo obligatorio para un usuario")
 	private Role role;
 
+	// Campos obligatorios para que funcione springboot security
 	@Column(name = "cuenta_activa")
 	private boolean accountNonExpired = true;
 	@Column(name = "cuenta_desbloqueada")

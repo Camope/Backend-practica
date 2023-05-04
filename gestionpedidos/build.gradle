@@ -24,7 +24,14 @@ dependencies {
 	// Librería para la validación
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	runtimeOnly 'com.h2database:h2'
+	
+	// BBDD H2 para trabajar en local
+	//runtimeOnly 'com.h2database:h2'
+	// BBDD Elephant
+	
+	runtimeOnly 'org.postgresql:postgresql'
+	
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	//necesario para gestionar tokens
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'

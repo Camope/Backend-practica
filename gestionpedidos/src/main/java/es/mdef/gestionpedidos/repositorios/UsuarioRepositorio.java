@@ -21,7 +21,7 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 					//+ "CUENTA_ACTIVA=?8, CUENTA_DESBLOQUEADA=?9, CREDENCIALES_ACTIVAS=?10, HABILITADA=?11",
 			nativeQuery = true
 	)
-	int update(String nombre, String username, Integer role, String telefono, Integer departamento, Integer tipo, Long id,
-				boolean cuenta_activa, boolean cuenta_desbloqueada, boolean credenciales_activas, boolean habilitada);
+	int update(String nombre, String username, Integer role, String telefono, Integer departamento, Integer tipo, Long id);
+				//boolean cuenta_activa, boolean cuenta_desbloqueada, boolean credenciales_activas, boolean habilitada);
 
 }
