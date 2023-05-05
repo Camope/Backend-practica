@@ -49,7 +49,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
+        // Me devuelve el valor de la autoridad
         Claims claims = JwtTokenService.getClaimsFromToken(token);
+        
         String rawAuthorities = claims.get("authorities").toString();
         rawAuthorities = rawAuthorities.substring(1, rawAuthorities.length()-1);
         List<String> authorities = Arrays.asList(rawAuthorities.split(","));

@@ -27,7 +27,7 @@ import jakarta.validation.constraints.NotBlank;
 @DiscriminatorFormula("CASE WHEN role=0 THEN 'ADMINISTRADOR' WHEN role=1 THEN 'NO_ADMINISTRADOR' end")
 public class Usuario implements UserDetails { // implementa UserDetails para la securización
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;  // Necesario para la parte de seguridad
 
 	public static enum Role {
 		administrador, noAdministrador

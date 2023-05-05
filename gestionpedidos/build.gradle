@@ -26,9 +26,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	
 	// BBDD H2 para trabajar en local
-	//runtimeOnly 'com.h2database:h2'
-	// BBDD Elephant
+	// runtimeOnly 'com.h2database:h2'
 	
+	// BBDD postgres
 	runtimeOnly 'org.postgresql:postgresql'
 	
 	

@@ -3,6 +3,7 @@ package es.mdef.gestionpedidos.validation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +41,13 @@ public class ArgumentNotValidExceptionHandler {
         return errors;
     }
 	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public Map<String, String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getRootCause().getMessage());
+        return error;
+    }
 	
 }
 

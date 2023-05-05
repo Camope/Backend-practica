@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "PREGUNTAS")
@@ -21,10 +22,10 @@ public class Pregunta {
 	@JsonIgnore
 	private Long id;
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	@NotBlank(message="usuario es un campo obligatorio para una pregunta")
+	@NotNull(message="usuario es un campo obligatorio para una pregunta")
 	private Usuario usuario;
 	@ManyToOne(optional = false, fetch = FetchType.EAGER)
-	@NotBlank(message="familia es un campo obligatorio para una pregunta")
+	@NotNull(message="familia es un campo obligatorio para una pregunta")
 	private FamiliaImpl familia;
 	@NotBlank(message="enunciado es un campo obligatorio para una pregunta")
 	private String enunciado;
