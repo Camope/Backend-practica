@@ -16,9 +16,10 @@ public class NoAdministrador extends Usuario {
 		alumno, docente, administracion
 	}
 
-	@NotBlank(message="departamento es un campo obligatorio para un usuario no administrador")
+	//@NotBlank(message="departamento es un campo obligatorio para un usuario no administrador")
+	// Este decorador no puede aplicarse a enum
 	private Departamento departamento;
-	@NotBlank(message="tipo es un campo obligatorio para un usuario no administrador")
+	//@NotBlank(message="tipo es un campo obligatorio para un usuario no administrador")
 	private Tipo tipo;
 
 	public Departamento getDepartamento() {
