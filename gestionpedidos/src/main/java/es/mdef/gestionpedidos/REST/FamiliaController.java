@@ -22,6 +22,7 @@ import es.mdef.gestionpedidos.entidades.FamiliaImpl;
 import es.mdef.gestionpedidos.entidades.Pregunta;
 import es.mdef.gestionpedidos.entidades.Usuario;
 import es.mdef.gestionpedidos.repositorios.FamiliaRepositorio;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/familias")
@@ -53,7 +54,7 @@ public class FamiliaController {
 	}
 
 	@PutMapping("{id}")
-	public FamiliaModel edit(@PathVariable Long id, @RequestBody FamiliaPostModel model) {
+	public FamiliaModel edit(@PathVariable Long id, @Valid @RequestBody FamiliaPostModel model) {
 		FamiliaImpl familia = repositorio.findById(id).map(f -> {
 		
 			f.setEnunciado(model.getEnunciado());
@@ -102,7 +103,7 @@ public class FamiliaController {
 	}
 	
 	@PostMapping
-	public FamiliaModel add(@RequestBody FamiliaPostModel model) {
+	public FamiliaModel add(@Valid @RequestBody FamiliaPostModel model) {
 		FamiliaImpl familia = new FamiliaImpl();
 		
 		familia.setEnunciado(model.getEnunciado());

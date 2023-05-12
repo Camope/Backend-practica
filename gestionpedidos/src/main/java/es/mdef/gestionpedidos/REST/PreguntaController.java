@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import es.mdef.gestionpedidos.GestionpedidosApplication;
 import es.mdef.gestionpedidos.entidades.Pregunta;
 import es.mdef.gestionpedidos.repositorios.PreguntaRepositorio;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/preguntas")
@@ -42,7 +43,7 @@ public class PreguntaController {
 	}
 	
 	@PutMapping("{id}")
-	public PreguntaModel edit(@PathVariable Long id, @RequestBody PreguntaPostModel model) {
+	public PreguntaModel edit(@PathVariable Long id, @Valid @RequestBody PreguntaPostModel model) {
 		Pregunta pregunta = repositorio.findById(id).map(p -> {
 		
 			p.setEnunciado(model.getEnunciado());
@@ -69,7 +70,7 @@ public class PreguntaController {
 	}
 	
 	@PostMapping
-	public PreguntaModel add(@RequestBody PreguntaPostModel model) {
+	public PreguntaModel add(@Valid @RequestBody PreguntaPostModel model) {
 		Pregunta pregunta = new Pregunta();
 		
 		pregunta.setEnunciado(model.getEnunciado());
